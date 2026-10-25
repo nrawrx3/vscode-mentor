@@ -1,0 +1,192 @@
+{
+  "name": "vscode-mentor",
+  "displayName": "Mentor",
+  "description": "Four deliberate Codex actions for learning in the editor.",
+  "version": "0.1.0",
+  "publisher": "nrawrx3",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.95.0",
+    "node": ">=22"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "extensionKind": [
+    "workspace"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    },
+    "virtualWorkspaces": false
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "package": "npm run build && node -e \"require('node:fs').mkdirSync('.local',{recursive:true})\" && vsce package --skip-license --no-rewrite-relative-links --out .local/vscode-mentor.vsix",
+    "smoke:codex": "npm run build && node dist/test/live.js"
+  },
+  "devDependencies": {
+    "@openai/codex": "0.164.0",
+    "@types/node": "22.15.30",
+    "@types/vscode": "1.95.0",
+    "@vscode/vsce": "3.6.0",
+    "typescript": "5.9.3"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "mentor.suggest",
+        "title": "Mentor: Suggest"
+      },
+      {
+        "command": "mentor.finish",
+        "title": "Mentor: Finish"
+      },
+      {
+        "command": "mentor.next",
+        "title": "Mentor: Next"
+      },
+      {
+        "command": "mentor.ask",
+        "title": "Mentor: Ask"
+      },
+      {
+        "command": "mentor.menu",
+        "title": "Mentor: Help Here"
+      },
+      {
+        "command": "mentor.cancel",
+        "title": "Mentor: Cancel"
+      },
+      {
+        "command": "mentor.accept",
+        "title": "Mentor: Apply Preview"
+      },
+      {
+        "command": "mentor.discard",
+        "title": "Mentor: Discard Preview"
+      },
+      {
+        "command": "mentor.model",
+        "title": "Mentor: Select Model"
+      },
+      {
+        "command": "mentor.reset",
+        "title": "Mentor: New Ask Conversation"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "mentor.suggest",
+        "key": "alt+\\",
+        "when": "editorTextFocus && !editorReadonly"
+      },
+      {
+        "command": "mentor.menu",
+        "key": "ctrl+alt+space",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "mentor.cancel",
+        "key": "escape",
+        "when": "mentor.busy && editorTextFocus"
+      },
+      {
+        "command": "mentor.accept",
+        "key": "ctrl+enter",
+        "mac": "cmd+enter",
+        "when": "mentor.preview && editorTextFocus"
+      },
+      {
+        "command": "mentor.discard",
+        "key": "escape",
+        "when": "mentor.preview && editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "mentor.accept",
+          "when": "mentor.preview && resourceScheme == vscode-mentor",
+          "group": "navigation"
+        },
+        {
+          "command": "mentor.discard",
+          "when": "mentor.preview && resourceScheme == vscode-mentor",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Mentor",
+      "properties": {
+        "mentor.minimalLayout": {
+          "type": "boolean",
+          "default": false,
+          "description": "Close the sidebar on first activation in this profile. Enabled by the isolated launcher."
+        },
+        "mentor.codexPath": {
+          "type": "string",
+          "default": "codex",
+          "scope": "machine",
+          "description": "Native Codex executable. The isolated launcher resolves the platform-specific local runtime."
+        },
+        "mentor.codexHome": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "description": "Optional isolated Codex state directory."
+        },
+        "mentor.model": {
+          "type": "string",
+          "default": "",
+          "description": "Empty uses the account's default available model."
+        },
+        "mentor.effort": {
+          "type": "string",
+          "default": "low",
+          "enum": [
+            "none",
+            "minimal",
+            "low",
+            "medium",
+            "high"
+          ],
+          "description": "Preferred reasoning effort; falls back when unsupported."
+        },
+        "mentor.suggestTimeoutMs": {
+          "type": "number",
+          "default": 15000,
+          "minimum": 1000,
+          "maximum": 60000
+        },
+        "mentor.taskTimeoutMs": {
+          "type": "number",
+          "default": 180000,
+          "minimum": 1000,
+          "maximum": 900000
+        },
+        "mentor.lessonFile": {
+          "type": "string",
+          "default": "lesson.md",
+          "description": "Workspace-relative learning objective and student-owned decisions."
+        }
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nrawrx3/vscode-mentor.git"
+  },
+  "homepage": "https://github.com/nrawrx3/vscode-mentor#readme",
+  "bugs": {
+    "url": "https://github.com/nrawrx3/vscode-mentor/issues"
+  }
+}

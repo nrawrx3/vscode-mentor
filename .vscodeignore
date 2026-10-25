@@ -1,0 +1,16 @@
+.local/**
+node_modules/**
+src/**
+dist/test/**
+**/*.map
+package-lock.json
+tsconfig.json
+*.py
+scripts/**
+.github/**
+examples/**
+AGENTS.md
+__pycache__/**
+clangd.lock.json
+.gitignore
+.vscodeignore
