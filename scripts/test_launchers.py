@@ -34,7 +34,7 @@ class LauncherTests(unittest.TestCase):
                 with patch.object(editor, 'SETTINGS', settings):
                     editor.write_settings('codex', 'clangd', 'build', workspace)
                     self.assertEqual(editor.read_settings()['clangd.arguments'][1],
-                                     f'--compile-commands-dir={workspace / "build"}')
+                                     f'--compile-commands-dir={(workspace / "build").resolve()}')
             with self.assertRaisesRegex(ValueError, 'existing directory'):
                 editor.workspace_path(Path(temp) / 'missing')
 
